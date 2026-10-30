@@ -1,0 +1,28 @@
+{
+    "name": "pulse-monitor-server",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+    "engines": {
+        "node": ">=22"
+    },
+    "scripts": {
+        "dev": "node --watch --env-file-if-exists=.env src/index.js",
+        "start": "node --env-file-if-exists=.env src/index.js",
+        "scheduler": "node --env-file-if-exists=.env src/scheduler-only.js",
+        "db:migrate": "node --env-file-if-exists=.env src/db/migrate.js",
+        "db:seed": "node --env-file-if-exists=.env src/db/seed.js",
+        "db:retention": "node --env-file-if-exists=.env src/jobs/run-retention.js",
+        "test": "node --env-file-if-exists=.env --test --test-concurrency=1 \"test/*.test.js\""
+    },
+    "dependencies": {
+        "cookie-parser": "^1.4.7",
+        "express": "^5.2.1",
+        "express-rate-limit": "^8.7.0",
+        "helmet": "^8.3.0",
+        "jsonwebtoken": "^9.0.3",
+        "node-cron": "^4.6.0",
+        "pg": "^8.23.0",
+        "resend": "^6.30.0"
+    }
+}
