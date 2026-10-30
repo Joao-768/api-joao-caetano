@@ -5,7 +5,7 @@ One Express service that hosts the backends of my portfolio projects, each under
 | Project                    | Prefix                                    | Frontend                              | Database                          |
 | -------------------------- | ----------------------------------------- | ------------------------------------- | --------------------------------- |
 | CollabCode                 | `https://api.joao-caetano.com/collabcode` | `https://collabcode.joao-caetano.com` | Neon                              |
-| Pulse Monitor              | `https://api.joao-caetano.com/pulse`      | `https://pulse.joao-caetano.com`      | Supabase, schema `pulse`          |
+| PulseMonitor              | `https://api.joao-caetano.com/pulse`      | `https://pulse.joao-caetano.com`      | Supabase, schema `pulse`          |
 | FlowEngine                 | `https://api.joao-caetano.com/workflow`   | `https://workflow.joao-caetano.com`   | Supabase, schema `public` + Redis |
 
 It runs as a single free Render web service, kept awake by an external ping to `/health`. The free tier gives 750 instance hours per workspace per month, which is enough for exactly one service running all month, so the projects share it.
@@ -114,7 +114,7 @@ All of them are listed with local values in [.env.example](.env.example). In pro
 | `PULSE_JWT_SECRET`            | 32+ random characters                                  |
 | `PULSE_APP_URL`               | `https://pulse.joao-caetano.com`                       |
 | `PULSE_RESEND_API_KEY`        | Resend API key (password reset emails)                 |
-| `PULSE_EMAIL_FROM`            | Sender, e.g. `Pulse Monitor <onboarding@resend.dev>`   |
+| `PULSE_EMAIL_FROM`            | Sender, e.g. `PulseMonitor <onboarding@resend.dev>`   |
 | `PULSE_SEED_DEMO`             | `true`                                                 |
 | `PULSE_CHECK_CONCURRENCY`     | `10`                                                   |
 | `WORKFLOW_DATABASE_URL`       | Supabase session pooler, as `postgres`                 |

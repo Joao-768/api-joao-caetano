@@ -32,9 +32,9 @@ async function deliver({ to, subject, html, text }) {
 }
 
 export async function sendPasswordResetEmail({ to, resetUrl, expiresInMinutes }) {
-    const subject = 'Reset your Pulse Monitor password'
+    const subject = 'Reset your PulseMonitor password'
     const text = [
-        'Someone asked to reset the password for this Pulse Monitor account.',
+        'Someone asked to reset the password for this PulseMonitor account.',
         '',
         `Choose a new password here (the link expires in ${expiresInMinutes} minutes and works once):`,
         resetUrl,
@@ -44,7 +44,7 @@ export async function sendPasswordResetEmail({ to, resetUrl, expiresInMinutes })
 
     const html = `
         <div style="font-family: -apple-system, Segoe UI, sans-serif; max-width: 480px; color: #10131a;">
-            <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #5b6472;">Pulse Monitor</p>
+            <p style="font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #5b6472;">PulseMonitor</p>
             <h1 style="font-size: 22px; margin: 8px 0 16px;">Reset your password</h1>
             <p>Someone asked to reset the password for this account. The link expires in
                ${expiresInMinutes} minutes and works once.</p>

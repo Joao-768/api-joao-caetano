@@ -1,4 +1,4 @@
--- Pulse Monitor initial schema.
+-- PulseMonitor initial schema.
 -- gen_random_uuid() is built into PostgreSQL 13+.
 
 CREATE TABLE users (

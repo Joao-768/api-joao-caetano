@@ -32,7 +32,7 @@ services:
           - key: COLLAB_CLIENT_ORIGIN
             value: https://collabcode.joao-caetano.com
 
-          # Pulse Monitor: Supabase, schema "pulse", role of its own
+          # PulseMonitor: Supabase, schema "pulse", role of its own
           - key: PULSE_DATABASE_URL
             sync: false
           - key: PULSE_DATABASE_SSL

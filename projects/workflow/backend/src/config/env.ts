@@ -20,7 +20,7 @@ const schema = z
         DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
         DATABASE_SSL: bool.default(false),
         /**
-         * Shares the Supabase pooler with Pulse Monitor: in session mode every
+         * Shares the Supabase pooler with PulseMonitor: in session mode every
          * pooled connection holds one of the project's backend connections.
          */
         DATABASE_POOL_MAX: z.coerce.number().int().min(2).max(50).default(5),
