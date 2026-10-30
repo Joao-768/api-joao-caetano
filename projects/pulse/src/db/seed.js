@@ -110,6 +110,15 @@ const MONITORS = [
         baseLatency: 45,
         incidents: [],
     },
+    {
+        // The host this demo runs on. No invented history: it is created now
+        // and every check it shows is a real one.
+        name: 'Portfolio API',
+        url: 'https://api.joao-caetano.com/health',
+        createdAgo: 0,
+        baseLatency: 60,
+        incidents: [],
+    },
 ]
 
 function latencyAt(spec, time, now, random) {

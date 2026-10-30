@@ -1,5 +1,7 @@
 // Tunables for the check engine. Plan intervals live in plans.js.
 
+import { env } from './env.js'
+
 export const MONITORING = {
     // How often the scheduler looks for due monitors (node-cron, with seconds).
     schedulerCron: '*/5 * * * * *',
@@ -9,8 +11,8 @@ export const MONITORING = {
     // Hard limit for one check, redirects included.
     requestTimeoutMs: 10_000,
     maxRedirects: 5,
-    // Checks running at the same time inside one process.
-    concurrency: 20,
+    // Checks running at the same time inside one process (PULSE_CHECK_CONCURRENCY).
+    concurrency: env.checkConcurrency,
     userAgent: 'PulseMonitor/1.0 (+uptime check)',
     // Reachability probes used to tell "the site is down" from "we are
     // offline" (see monitoring/connectivity.js).

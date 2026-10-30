@@ -1,5 +1,5 @@
 // Scheduler as its own process (npm run scheduler), for running the API with
-// RUN_SCHEDULER=false and checks elsewhere, e.g. a Render background worker.
+// PULSE_RUN_SCHEDULER=false and checks elsewhere, e.g. a Render background worker.
 
 import { migrate } from './db/migrate.js'
 import { pool } from './db/pool.js'
