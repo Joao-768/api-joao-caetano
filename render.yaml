@@ -44,7 +44,7 @@ services:
           - key: PULSE_JWT_SECRET
             generateValue: true
           - key: PULSE_APP_URL
-            value: https://pulse.joao-caetano.com
+            value: https://pulsemonitor.joao-caetano.com
           - key: PULSE_RESEND_API_KEY
             sync: false
           - key: PULSE_EMAIL_FROM
@@ -68,7 +68,7 @@ services:
           - key: WORKFLOW_JWT_SECRET
             generateValue: true
           - key: WORKFLOW_FRONTEND_URL
-            value: https://workflow.joao-caetano.com
+            value: https://flowengine.joao-caetano.com
           - key: WORKFLOW_RESEND_API_KEY
             sync: false
           - key: WORKFLOW_EMAIL_FROM

@@ -2,11 +2,11 @@
 
 One Express service that hosts the backends of my portfolio projects, each under its own prefix:
 
-| Project                    | Prefix                                    | Frontend                              | Database                          |
-| -------------------------- | ----------------------------------------- | ------------------------------------- | --------------------------------- |
-| CollabCode                 | `https://api.joao-caetano.com/collabcode` | `https://collabcode.joao-caetano.com` | Neon                              |
-| PulseMonitor              | `https://api.joao-caetano.com/pulse`      | `https://pulse.joao-caetano.com`      | Supabase, schema `pulse`          |
-| FlowEngine                 | `https://api.joao-caetano.com/workflow`   | `https://workflow.joao-caetano.com`   | Supabase, schema `public` + Redis |
+| Project      | Prefix                                    | Frontend                                | Database                          |
+| ------------ | ----------------------------------------- | --------------------------------------- | --------------------------------- |
+| CollabCode   | `https://api.joao-caetano.com/collabcode` | `https://collabcode.joao-caetano.com`   | Neon                              |
+| PulseMonitor | `https://api.joao-caetano.com/pulse`      | `https://pulsemonitor.joao-caetano.com` | Supabase, schema `pulse`          |
+| FlowEngine   | `https://api.joao-caetano.com/workflow`   | `https://flowengine.joao-caetano.com`   | Supabase, schema `public` + Redis |
 
 It runs as a single free Render web service, kept awake by an external ping to `/health`. The free tier gives 750 instance hours per workspace per month, which is enough for exactly one service running all month, so the projects share it.
 
@@ -101,32 +101,32 @@ Pulse creates its demo account (`demo@pulsemonitor.dev` / `pulse-demo-2026`) on 
 
 All of them are listed with local values in [.env.example](.env.example). In production:
 
-| Variable                      | Value                                                  |
-| ----------------------------- | ------------------------------------------------------ |
-| `NODE_ENV`                    | `production`                                           |
-| `COLLAB_DATABASE_URL`         | Neon connection string                                 |
-| `COLLAB_JWT_SECRET`           | 32+ random characters                                  |
-| `COLLAB_JWT_EXPIRES_IN`       | `7d`                                                   |
-| `COLLAB_CLIENT_ORIGIN`        | `https://collabcode.joao-caetano.com`                  |
-| `PULSE_DATABASE_URL`          | Supabase session pooler, as the `pulse` role           |
-| `PULSE_DATABASE_SSL`          | `true`                                                 |
-| `PULSE_DATABASE_POOL_MAX`     | `5`                                                    |
-| `PULSE_JWT_SECRET`            | 32+ random characters                                  |
-| `PULSE_APP_URL`               | `https://pulse.joao-caetano.com`                       |
-| `PULSE_RESEND_API_KEY`        | Resend API key (password reset emails)                 |
-| `PULSE_EMAIL_FROM`            | Sender, e.g. `PulseMonitor <onboarding@resend.dev>`   |
-| `PULSE_SEED_DEMO`             | `true`                                                 |
-| `PULSE_CHECK_CONCURRENCY`     | `10`                                                   |
-| `WORKFLOW_DATABASE_URL`       | Supabase session pooler, as `postgres`                 |
-| `WORKFLOW_DATABASE_SSL`       | `true`                                                 |
-| `WORKFLOW_DATABASE_POOL_MAX`  | `5`                                                    |
-| `WORKFLOW_REDIS_URL`          | Internal URL of the Render Key Value instance          |
-| `WORKFLOW_QUEUE_PREFIX`       | `wae`                                                  |
-| `WORKFLOW_JWT_SECRET`         | 32+ random characters                                  |
-| `WORKFLOW_FRONTEND_URL`       | `https://workflow.joao-caetano.com`                    |
-| `WORKFLOW_RESEND_API_KEY`     | Resend API key (email node)                            |
-| `WORKFLOW_EMAIL_FROM`         | Sender, e.g. `FlowEngine <onboarding@resend.dev>`      |
-| `WORKFLOW_WORKER_CONCURRENCY` | `2`                                                    |
+| Variable                      | Value                                               |
+| ----------------------------- | --------------------------------------------------- |
+| `NODE_ENV`                    | `production`                                        |
+| `COLLAB_DATABASE_URL`         | Neon connection string                              |
+| `COLLAB_JWT_SECRET`           | 32+ random characters                               |
+| `COLLAB_JWT_EXPIRES_IN`       | `7d`                                                |
+| `COLLAB_CLIENT_ORIGIN`        | `https://collabcode.joao-caetano.com`               |
+| `PULSE_DATABASE_URL`          | Supabase session pooler, as the `pulse` role        |
+| `PULSE_DATABASE_SSL`          | `true`                                              |
+| `PULSE_DATABASE_POOL_MAX`     | `5`                                                 |
+| `PULSE_JWT_SECRET`            | 32+ random characters                               |
+| `PULSE_APP_URL`               | `https://pulsemonitor.joao-caetano.com`             |
+| `PULSE_RESEND_API_KEY`        | Resend API key (password reset emails)              |
+| `PULSE_EMAIL_FROM`            | Sender, e.g. `PulseMonitor <onboarding@resend.dev>` |
+| `PULSE_SEED_DEMO`             | `true`                                              |
+| `PULSE_CHECK_CONCURRENCY`     | `10`                                                |
+| `WORKFLOW_DATABASE_URL`       | Supabase session pooler, as `postgres`              |
+| `WORKFLOW_DATABASE_SSL`       | `true`                                              |
+| `WORKFLOW_DATABASE_POOL_MAX`  | `5`                                                 |
+| `WORKFLOW_REDIS_URL`          | Internal URL of the Render Key Value instance       |
+| `WORKFLOW_QUEUE_PREFIX`       | `wae`                                               |
+| `WORKFLOW_JWT_SECRET`         | 32+ random characters                               |
+| `WORKFLOW_FRONTEND_URL`       | `https://flowengine.joao-caetano.com`               |
+| `WORKFLOW_RESEND_API_KEY`     | Resend API key (email node)                         |
+| `WORKFLOW_EMAIL_FROM`         | Sender, e.g. `FlowEngine <onboarding@resend.dev>`   |
+| `WORKFLOW_WORKER_CONCURRENCY` | `2`                                                 |
 
 `PORT` is set by Render. With the `onboarding@resend.dev` sender, Resend only delivers to the address that owns the Resend account; verify a domain in Resend to send to anyone.
 
