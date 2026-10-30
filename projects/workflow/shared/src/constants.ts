@@ -155,7 +155,7 @@ export const NODE_META: Record<
     },
     email: {
         label: 'Email',
-        description: 'Send an email over SMTP, or simulate it.',
+        description: 'Send an email through Resend, or simulate it.',
         category: 'action',
     },
     create_record: {

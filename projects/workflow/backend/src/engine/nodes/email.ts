@@ -4,7 +4,7 @@ import { defineNode } from './types'
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-/** Sends through the configured EmailSender (SMTP, or simulated in dev). */
+/** Sends through the configured EmailSender (Resend, or simulated without a key). */
 export const emailNode = defineNode<'email', { to: string; subject: string; body: string }>({
     prepare(node, context) {
         return {

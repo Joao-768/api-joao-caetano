@@ -41,12 +41,9 @@ const schema = z
         HTTP_ALLOW_PRIVATE_NETWORKS: bool.default(false),
         HTTP_MAX_RESPONSE_BYTES: z.coerce.number().int().min(1024).default(1_000_000),
 
-        SMTP_HOST: z.string().optional(),
-        SMTP_PORT: z.coerce.number().int().positive().default(587),
-        SMTP_SECURE: bool.default(false),
-        SMTP_USER: z.string().optional(),
-        SMTP_PASS: z.string().optional(),
-        SMTP_FROM: z.string().default('Workflow Engine <no-reply@example.com>'),
+        /** Email goes through Resend's HTTP API; without a key it is simulated. */
+        RESEND_API_KEY: z.string().optional(),
+        EMAIL_FROM: z.string().default('Workflow Engine <onboarding@resend.dev>'),
     })
     .superRefine((env, ctx) => {
         if (env.NODE_ENV === 'production' && env.JWT_SECRET.length < 32) {
