@@ -1,0 +1,87 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+enum Role {
+    OWNER
+    COLLABORATOR
+}
+
+model User {
+    id            String          @id @default(cuid())
+    email         String          @unique
+    name          String
+    passwordHash  String
+    createdAt     DateTime        @default(now())
+    ownedProjects Project[]       @relation("ProjectOwner")
+    memberships   ProjectMember[]
+    messages      Message[]
+
+    @@map("users")
+}
+
+model Project {
+    id        String          @id @default(cuid())
+    name      String
+    ownerId   String
+    createdAt DateTime        @default(now())
+    updatedAt DateTime        @updatedAt
+    members   ProjectMember[]
+    files     File[]
+    messages  Message[]
+
+    owner User @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+    @@index([ownerId])
+    @@map("projects")
+}
+
+model ProjectMember {
+    id        String   @id @default(cuid())
+    projectId String
+    userId    String
+    role      Role     @default(COLLABORATOR)
+    joinedAt  DateTime @default(now())
+
+    project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([projectId, userId])
+    @@index([userId])
+    @@map("project_members")
+}
+
+model File {
+    id        String   @id @default(cuid())
+    projectId String
+    name      String
+    language  String   @default("javascript")
+    content   String   @default("")
+    ydoc      Bytes?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+    @@unique([projectId, name])
+    @@index([projectId])
+    @@map("files")
+}
+
+model Message {
+    id        String   @id @default(cuid())
+    projectId String
+    userId    String
+    content   String
+    createdAt DateTime @default(now())
+
+    project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([projectId, createdAt])
+    @@map("messages")
+}
