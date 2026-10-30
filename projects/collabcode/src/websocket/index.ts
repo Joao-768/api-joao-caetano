@@ -1,7 +1,5 @@
-import { Server } from 'socket.io'
-import type { Server as HttpServer } from 'node:http'
+import type { Namespace } from 'socket.io'
 import cookie from 'cookie'
-import { env } from '../lib/env.js'
 import { verifyToken } from '../lib/jwt.js'
 import { getUserById } from '../services/auth.service.js'
 import { prisma } from '../lib/prisma.js'
@@ -26,19 +24,17 @@ declare module 'socket.io' {
     }
 }
 
-// Set once the socket server exists, so HTTP handlers can announce file
-// changes to the room without importing the server itself.
-let ioRef: Server | null = null
+// Set once the namespace exists, so HTTP handlers can announce file changes
+// to the room without importing the socket server itself.
+let ioRef: Namespace | null = null
 
 export function emitToProject(projectId: string, event: string, payload: unknown): void {
     ioRef?.to(projectId).emit(event, payload)
 }
 
-export function createSocketServer(httpServer: HttpServer): Server {
-    const io = new Server(httpServer, {
-        cors: { origin: env.CLIENT_ORIGIN, credentials: true },
-    })
-
+// The host owns the Socket.io server (one for every project) and hands this
+// project its own namespace, /collabcode. CORS is configured there.
+export function registerSocketHandlers(io: Namespace): void {
     ioRef = io
 
     io.use(async (socket, next) => {
@@ -125,6 +121,4 @@ export function createSocketServer(httpServer: HttpServer): Server {
             }
         })
     })
-
-    return io
 }

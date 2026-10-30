@@ -1,4 +1,4 @@
-import type { Server, Socket } from 'socket.io'
+import type { Namespace, Socket } from 'socket.io'
 import { SOCKET_EVENTS } from './events.js'
 import type { PresenceUser } from './events.js'
 
@@ -24,7 +24,7 @@ export function colorForUser(userId: string): string {
     return COLORS[Math.abs(hash) % COLORS.length]!
 }
 
-export async function broadcastPresence(io: Server, projectId: string): Promise<void> {
+export async function broadcastPresence(io: Namespace, projectId: string): Promise<void> {
     const sockets = await io.in(projectId).fetchSockets()
     const seen = new Map<string, PresenceUser>()
 

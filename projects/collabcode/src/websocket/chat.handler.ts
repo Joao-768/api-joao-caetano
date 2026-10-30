@@ -1,10 +1,10 @@
-import type { Server, Socket } from 'socket.io'
+import type { Namespace, Socket } from 'socket.io'
 import { SOCKET_EVENTS } from './events.js'
 import * as messageService from '../services/message.service.js'
 
 const MAX_MESSAGE_LENGTH = 2000
 
-export function registerChat(io: Server, socket: Socket): void {
+export function registerChat(io: Namespace, socket: Socket): void {
     socket.on(SOCKET_EVENTS.CHAT_MESSAGE, async ({ content }: { content: string }) => {
         if (!socket.projectId) return
 

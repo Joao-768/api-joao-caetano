@@ -13,6 +13,7 @@ export default defineConfig({
         // `generate` only reads the schema, so it must not fail when the URL is
         // absent (it is set at build time on the host, not on a fresh checkout).
         // `migrate` does connect, and errors on the placeholder if it is unset.
-        url: process.env.DATABASE_URL ?? 'postgresql://unset',
+        // The host prefixes this project's variables with COLLAB_.
+        url: process.env.COLLAB_DATABASE_URL ?? 'postgresql://unset',
     },
 })
