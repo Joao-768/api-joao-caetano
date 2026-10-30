@@ -1,0 +1,39 @@
+{
+    "name": "workflow-automation-engine",
+    "private": true,
+    "description": "A small event-driven workflow automation engine: visual builder, BullMQ workers, PostgreSQL execution traces.",
+    "workspaces": [
+        "shared",
+        "backend",
+        "frontend"
+    ],
+    "engines": {
+        "node": ">=22"
+    },
+    "scripts": {
+        "postinstall": "npm run build -w shared",
+        "infra:up": "docker compose up -d",
+        "infra:down": "docker compose down",
+        "build:shared": "npm run build -w shared",
+        "migrate": "npm run migrate -w backend",
+        "seed": "npm run seed -w backend",
+        "dev": "npm run build:shared && concurrently -k -n api,worker,web -c white,gray,blue \"npm run dev -w backend\" \"npm run worker -w backend\" \"npm run dev -w frontend\"",
+        "dev:api": "npm run dev -w backend",
+        "worker": "npm run worker -w backend",
+        "dev:web": "npm run dev -w frontend",
+        "build": "npm run build -w shared && npm run build -w backend && npm run build -w frontend",
+        "start": "npm run start -w backend",
+        "start:worker": "npm run start:worker -w backend",
+        "typecheck": "npm run build:shared && npm run typecheck -w backend && npm run typecheck -w frontend",
+        "lint": "oxlint shared/src backend/src backend/test frontend/src && prettier --check \"{shared,backend,frontend}/src/**/*.{ts,tsx,css}\" \"backend/test/**/*.ts\"",
+        "format": "prettier --write \"{shared,backend,frontend}/src/**/*.{ts,tsx,css}\"",
+        "test": "npm run build:shared && npm run test -w shared && npm run test -w backend",
+        "test:unit": "npm run build:shared && npm run test -w shared && npm run test:unit -w backend",
+        "test:e2e": "npm run test:e2e -w frontend"
+    },
+    "devDependencies": {
+        "concurrently": "^10.0.5",
+        "oxlint": "^1.75.0",
+        "prettier": "^3.9.9"
+    }
+}
