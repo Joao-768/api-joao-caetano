@@ -1,0 +1,71 @@
+# Render Blueprint: one free web service that hosts every project.
+#
+# Free instance hours are 750 per workspace per month and this service runs
+# all month (744 h at most), so it must be the only free web service awake in
+# the workspace. Keep it in Frankfurt: the Workflow engine reaches the Key
+# Value instance (Redis) over Render's private network, which is regional.
+#
+# Values marked `sync: false` are entered in the dashboard on the first sync.
+
+services:
+    - type: web
+      name: api-joao-caetano
+      runtime: node
+      plan: free
+      region: frankfurt
+      buildCommand: npm ci && npm run build
+      startCommand: npm start
+      healthCheckPath: /health
+      domains:
+          - api.joao-caetano.com
+      envVars:
+          - key: NODE_ENV
+            value: production
+
+          # CollabCode: Neon
+          - key: COLLAB_DATABASE_URL
+            sync: false
+          - key: COLLAB_JWT_SECRET
+            generateValue: true
+          - key: COLLAB_JWT_EXPIRES_IN
+            value: 7d
+          - key: COLLAB_CLIENT_ORIGIN
+            value: https://collabcode.joao-caetano.com
+
+          # Pulse Monitor: Supabase, schema "pulse", role of its own
+          - key: PULSE_DATABASE_URL
+            sync: false
+          - key: PULSE_DATABASE_SSL
+            value: 'true'
+          - key: PULSE_JWT_SECRET
+            generateValue: true
+          - key: PULSE_APP_URL
+            value: https://pulse.joao-caetano.com
+          - key: PULSE_RESEND_API_KEY
+            sync: false
+          - key: PULSE_EMAIL_FROM
+            sync: false
+          - key: PULSE_SEED_DEMO
+            value: 'true'
+          - key: PULSE_CHECK_CONCURRENCY
+            value: '10'
+
+          # Workflow engine: Supabase (public schema) and the Key Value instance
+          - key: WORKFLOW_DATABASE_URL
+            sync: false
+          - key: WORKFLOW_DATABASE_SSL
+            value: 'true'
+          - key: WORKFLOW_REDIS_URL
+            sync: false
+          - key: WORKFLOW_QUEUE_PREFIX
+            value: wae
+          - key: WORKFLOW_JWT_SECRET
+            generateValue: true
+          - key: WORKFLOW_FRONTEND_URL
+            value: https://workflow.joao-caetano.com
+          - key: WORKFLOW_RESEND_API_KEY
+            sync: false
+          - key: WORKFLOW_EMAIL_FROM
+            sync: false
+          - key: WORKFLOW_WORKER_CONCURRENCY
+            value: '2'
