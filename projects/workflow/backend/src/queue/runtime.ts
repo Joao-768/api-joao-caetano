@@ -7,8 +7,7 @@ const RECONCILE_EVERY_MS = 5 * 60_000
 
 /**
  * Starts consuming jobs: the BullMQ worker plus the periodic schedule
- * reconciliation. Used by the worker process (worker.ts) and, when
- * RUN_WORKER_IN_API is set, inside the API process.
+ * reconciliation. Started by mount.ts, inside the host process.
  *
  * Returns a stop function that waits for running jobs to finish.
  */

@@ -17,8 +17,6 @@ const schema = z
         LOG_LEVEL: z
             .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
             .default('info'),
-        PORT: z.coerce.number().int().positive().default(3000),
-
         DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
         DATABASE_SSL: bool.default(false),
         REDIS_URL: z.string().min(1).default('redis://localhost:6379'),
@@ -30,9 +28,11 @@ const schema = z
         /** Comma-separated list of origins allowed by CORS. */
         FRONTEND_URL: z.string().default('http://localhost:5176'),
 
-        /** Run the worker inside the API process (single-process hosting). */
-        RUN_WORKER_IN_API: bool.default(false),
-        WORKER_CONCURRENCY: z.coerce.number().int().min(1).max(50).default(5),
+        /**
+         * Node jobs running at the same time. The worker always runs inside the
+         * host process, which other projects share, so the default is low.
+         */
+        WORKER_CONCURRENCY: z.coerce.number().int().min(1).max(50).default(2),
         /** First retry waits this long, then doubles on every attempt. */
         RETRY_BACKOFF_MS: z.coerce.number().int().min(10).default(2000),
         /** Upper bound for any single node, whatever its own config says. */
@@ -58,16 +58,30 @@ const schema = z
         }
     })
 
+/**
+ * Hosted by api-joao-caetano next to other projects, so every variable of this
+ * one carries the WORKFLOW_ prefix (WORKFLOW_DATABASE_URL, WORKFLOW_JWT_SECRET...)
+ * and cannot collide with another project's. NODE_ENV is shared.
+ */
+const PREFIX = 'WORKFLOW_'
+
+function scopedEnv(): Record<string, string | undefined> {
+    const scoped: Record<string, string | undefined> = { NODE_ENV: process.env.NODE_ENV }
+    for (const [key, value] of Object.entries(process.env)) {
+        if (key.startsWith(PREFIX)) scoped[key.slice(PREFIX.length)] = value
+    }
+    return scoped
+}
+
 function load() {
-    const parsed = schema.safeParse(process.env)
+    const parsed = schema.safeParse(scopedEnv())
     if (!parsed.success) {
         const lines = parsed.error.issues.map(
-            (issue) => `  ${issue.path.join('.')}: ${issue.message}`,
+            (issue) => `  ${PREFIX}${issue.path.join('.')}: ${issue.message}`,
         )
-        // The logger depends on this config, so this is the one place that
-        // writes to stderr directly.
-        process.stderr.write(`Invalid environment configuration:\n${lines.join('\n')}\n`)
-        process.exit(1)
+        // Throw instead of exiting: the host catches it and keeps the other
+        // projects up.
+        throw new Error(`Invalid environment configuration:\n${lines.join('\n')}`)
     }
     return parsed.data
 }

@@ -14,7 +14,7 @@ import { workflowsRouter } from './routes/workflows'
 
 /**
  * Builds the Express app without starting it, so tests can drive it with
- * supertest and server.ts can decide how to listen and shut down.
+ * supertest and mount.ts can hand it to the host.
  */
 export function createApp() {
     const app = express()
