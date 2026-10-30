@@ -38,6 +38,17 @@ const schema = z
         /** Upper bound for any single node, whatever its own config says. */
         NODE_TIMEOUT_MS: z.coerce.number().int().min(1000).default(30_000),
 
+        /**
+         * Budget of active time per execution; delay nodes do not count. This
+         * and the two limits below keep one bad workflow from starving the
+         * other projects that share the process.
+         */
+        EXECUTION_TIMEOUT_MS: z.coerce.number().int().min(1000).default(300_000),
+        /** Ceiling on attempts per node, whatever the node itself asks for. */
+        MAX_ATTEMPTS_CAP: z.coerce.number().int().min(1).max(5).default(3),
+        /** Queued or running executions one user may have; more are refused. */
+        MAX_ACTIVE_EXECUTIONS_PER_USER: z.coerce.number().int().min(1).default(5),
+
         HTTP_ALLOW_PRIVATE_NETWORKS: bool.default(false),
         HTTP_MAX_RESPONSE_BYTES: z.coerce.number().int().min(1024).default(1_000_000),
 

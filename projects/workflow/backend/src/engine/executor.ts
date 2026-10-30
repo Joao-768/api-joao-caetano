@@ -79,6 +79,14 @@ export async function executeNodeJob(
     }
     await executions.completeWaitingSteps(executionId)
 
+    if ((await executions.activeTimeMs(executionId)) > env.EXECUTION_TIMEOUT_MS) {
+        return failExecution(executionId, {
+            code: 'execution_timeout',
+            message: `The execution ran for more than ${env.EXECUTION_TIMEOUT_MS / 1000} s of active time and was stopped`,
+            nodeId,
+        })
+    }
+
     // 2. Load ----------------------------------------------------------------
     const snapshot = await findVersionDefinition(execution.workflow_id, execution.workflow_version)
     const validation = validateDefinition(snapshot)

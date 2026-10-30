@@ -1,8 +1,14 @@
 import { findTrigger, validateDefinition, type TriggerType } from '@wae/shared'
+import { env } from '../config/env'
 import { pool } from '../db/pool'
-import { serviceUnavailable } from '../lib/errors'
+import { AppError, serviceUnavailable } from '../lib/errors'
 import { logger } from '../lib/logger'
-import { finishExecution, insertExecution, type ExecutionRow } from '../repositories/executions'
+import {
+    countActiveExecutions,
+    finishExecution,
+    insertExecution,
+    type ExecutionRow,
+} from '../repositories/executions'
 import type { WorkflowRow } from '../repositories/workflows'
 import { enqueueNode } from '../queue/queue'
 
@@ -25,6 +31,17 @@ export async function startExecution(input: {
     payload: unknown
 }): Promise<ExecutionRow> {
     const { workflow } = input
+
+    // Refused before anything is recorded, so a flood of triggers cannot fill
+    // the database either.
+    if ((await countActiveExecutions(workflow.user_id)) >= env.MAX_ACTIVE_EXECUTIONS_PER_USER) {
+        throw new AppError(
+            429,
+            'too_many_executions',
+            `Too many executions in progress (limit ${env.MAX_ACTIVE_EXECUTIONS_PER_USER}). Try again when some have finished.`,
+        )
+    }
+
     const validation = validateDefinition(workflow.definition)
     const trigger = validation.valid ? findTrigger(validation.definition) : undefined
 

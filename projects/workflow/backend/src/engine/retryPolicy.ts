@@ -1,4 +1,5 @@
 import { DEFAULT_MAX_ATTEMPTS, type WorkflowNode } from '@wae/shared'
+import { env } from '../config/env'
 import type { NodeError } from './errors'
 
 /**
@@ -6,7 +7,8 @@ import type { NodeError } from './errors'
  *
  *   - How many attempts: the node's own `maxAttempts` if it has one (HTTP and
  *     email nodes let the user choose), otherwise a per-type default
- *     (3 for HTTP and email, 2 for records, 1 for everything deterministic).
+ *     (3 for HTTP and email, 2 for records, 1 for everything deterministic),
+ *     never above MAX_ATTEMPTS_CAP.
  *   - Whether to retry: only errors marked retryable, and only while attempts
  *     remain.
  *   - When: BullMQ's exponential backoff, RETRY_BACKOFF_MS * 2^(attempt - 1),
@@ -14,10 +16,11 @@ import type { NodeError } from './errors'
  */
 
 export function maxAttemptsFor(node: WorkflowNode): number {
-    if ((node.type === 'http_request' || node.type === 'email') && node.config.maxAttempts) {
-        return node.config.maxAttempts
-    }
-    return DEFAULT_MAX_ATTEMPTS[node.type]
+    const wanted =
+        (node.type === 'http_request' || node.type === 'email') && node.config.maxAttempts
+            ? node.config.maxAttempts
+            : DEFAULT_MAX_ATTEMPTS[node.type]
+    return Math.min(wanted, env.MAX_ATTEMPTS_CAP)
 }
 
 export function shouldRetry(error: NodeError, attempt: number, maxAttempts: number): boolean {

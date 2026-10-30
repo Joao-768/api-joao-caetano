@@ -225,6 +225,28 @@ export async function insertExecution(
     return rows[0]
 }
 
+/** Executions of this user that are queued or running (waiting ones are idle). */
+export async function countActiveExecutions(userId: number): Promise<number> {
+    const { rows } = await pool.query<{ count: string }>(
+        `SELECT count(*) FROM executions WHERE user_id = $1 AND status IN ('queued', 'running')`,
+        [userId],
+    )
+    return Number(rows[0].count)
+}
+
+/**
+ * Time this execution has spent running nodes. Delay steps are left out:
+ * their duration is the wait itself, not work.
+ */
+export async function activeTimeMs(executionId: number): Promise<number> {
+    const { rows } = await pool.query<{ total: string }>(
+        `SELECT coalesce(sum(duration_ms), 0) AS total FROM execution_steps
+         WHERE execution_id = $1 AND node_type <> 'delay'`,
+        [executionId],
+    )
+    return Number(rows[0].total)
+}
+
 /**
  * Takes ownership of `nodeId` for this job. Succeeds only if the execution
  * is still in progress and its cursor points at this node; otherwise the job
