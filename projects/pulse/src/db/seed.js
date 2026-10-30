@@ -317,6 +317,8 @@ export async function seed() {
             }
 
             const lastCheck = history.checks.at(-1)
+            // No history (created just now): it stays PENDING, due at once.
+            if (!lastCheck) continue
             const active = history.incidentRows.some((incident) => !incident.resolvedAt)
             if (spec.pausedAgo) {
                 const pausedAt = new Date(now - spec.pausedAgo)
