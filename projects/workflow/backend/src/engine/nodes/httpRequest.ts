@@ -71,7 +71,7 @@ export const httpRequestNode = defineNode<'http_request', HttpInput>({
 
     async run(input, _node, runtime) {
         const headers: Record<string, string> = {
-            'user-agent': 'workflow-automation-engine/2',
+            'user-agent': 'flowengine/2',
             ...input.headers,
         }
         let body: string | undefined

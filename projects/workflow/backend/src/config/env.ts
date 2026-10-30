@@ -59,7 +59,7 @@ const schema = z
 
         /** Email goes through Resend's HTTP API; without a key it is simulated. */
         RESEND_API_KEY: z.string().optional(),
-        EMAIL_FROM: z.string().default('Workflow Engine <onboarding@resend.dev>'),
+        EMAIL_FROM: z.string().default('FlowEngine <onboarding@resend.dev>'),
     })
     .superRefine((env, ctx) => {
         if (env.NODE_ENV === 'production' && env.JWT_SECRET.length < 32) {

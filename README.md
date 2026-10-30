@@ -6,7 +6,7 @@ One Express service that hosts the backends of my portfolio projects, each under
 | -------------------------- | ----------------------------------------- | ------------------------------------- | --------------------------------- |
 | CollabCode                 | `https://api.joao-caetano.com/collabcode` | `https://collabcode.joao-caetano.com` | Neon                              |
 | Pulse Monitor              | `https://api.joao-caetano.com/pulse`      | `https://pulse.joao-caetano.com`      | Supabase, schema `pulse`          |
-| Workflow Automation Engine | `https://api.joao-caetano.com/workflow`   | `https://workflow.joao-caetano.com`   | Supabase, schema `public` + Redis |
+| FlowEngine                 | `https://api.joao-caetano.com/workflow`   | `https://workflow.joao-caetano.com`   | Supabase, schema `public` + Redis |
 
 It runs as a single free Render web service, kept awake by an external ping to `/health`. The free tier gives 750 instance hours per workspace per month, which is enough for exactly one service running all month, so the projects share it.
 
@@ -125,7 +125,7 @@ All of them are listed with local values in [.env.example](.env.example). In pro
 | `WORKFLOW_JWT_SECRET`         | 32+ random characters                                  |
 | `WORKFLOW_FRONTEND_URL`       | `https://workflow.joao-caetano.com`                    |
 | `WORKFLOW_RESEND_API_KEY`     | Resend API key (email node)                            |
-| `WORKFLOW_EMAIL_FROM`         | Sender, e.g. `Workflow Engine <onboarding@resend.dev>` |
+| `WORKFLOW_EMAIL_FROM`         | Sender, e.g. `FlowEngine <onboarding@resend.dev>`      |
 | `WORKFLOW_WORKER_CONCURRENCY` | `2`                                                    |
 
 `PORT` is set by Render. With the `onboarding@resend.dev` sender, Resend only delivers to the address that owns the Resend account; verify a domain in Resend to send to anyone.

@@ -1,7 +1,7 @@
 {
-    "name": "workflow-automation-engine",
+    "name": "flowengine",
     "private": true,
-    "description": "Workflow Automation Engine backend, hosted by api-joao-caetano at /workflow.",
+    "description": "FlowEngine backend, hosted by api-joao-caetano at /workflow.",
     "workspaces": [
         "shared",
         "backend"
