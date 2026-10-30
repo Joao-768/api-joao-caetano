@@ -6,7 +6,12 @@ import * as passwordResetRepository from '../repositories/password-reset.reposit
 import * as userRepository from '../repositories/user.repository.js'
 import { AppError, badRequest, conflict } from '../utils/errors.js'
 import { logger } from '../utils/logger.js'
-import { normalizeEmail, validateEmail, validateNewPassword } from '../utils/validate.js'
+import {
+    normalizeEmail,
+    validateEmail,
+    validateNewPassword,
+    validateUserName,
+} from '../utils/validate.js'
 import { sendPasswordResetEmail } from './email.service.js'
 import { burnVerificationTime, hashPassword, verifyPassword } from './password.service.js'
 
@@ -17,6 +22,7 @@ export function toPublicUser(user) {
     return {
         id: user.id,
         email: user.email,
+        name: user.name,
         plan: {
             key: plan.key,
             name: plan.name,
@@ -28,10 +34,12 @@ export function toPublicUser(user) {
     }
 }
 
-export async function register({ email, password }) {
+export async function register({ name, email, password }) {
     const fieldErrors = {}
+    const nameError = validateUserName(name)
     const emailError = validateEmail(email)
     const passwordError = validateNewPassword(password)
+    if (nameError) fieldErrors.name = nameError
     if (emailError) fieldErrors.email = emailError
     if (passwordError) fieldErrors.password = passwordError
     if (Object.keys(fieldErrors).length)
@@ -42,6 +50,7 @@ export async function register({ email, password }) {
     try {
         const user = await userRepository.create({
             email: normalized,
+            name: name.trim(),
             passwordHash,
             plan: DEFAULT_PLAN,
         })

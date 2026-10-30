@@ -17,6 +17,12 @@ export function validateNewPassword(value) {
     return null
 }
 
+export function validateUserName(value) {
+    if (typeof value !== 'string' || value.trim() === '') return 'Enter your name.'
+    if (value.trim().length > 80) return 'Use at most 80 characters.'
+    return null
+}
+
 export function validateMonitorName(value) {
     if (typeof value !== 'string' || value.trim() === '') return 'Enter a name.'
     if (value.trim().length > 80) return 'Use at most 80 characters.'

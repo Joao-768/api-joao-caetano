@@ -248,8 +248,8 @@ export async function seed() {
         const {
             rows: [user],
         } = await db.query(
-            `INSERT INTO users (email, password_hash, plan, created_at, password_changed_at)
-             VALUES ($1, $2, 'PRO', $3, $3) RETURNING id`,
+            `INSERT INTO users (email, name, password_hash, plan, created_at, password_changed_at)
+             VALUES ($1, 'Demo user', $2, 'PRO', $3, $3) RETURNING id`,
             [DEMO_EMAIL, passwordHash, new Date(now - 31 * DAY)],
         )
 

@@ -1,6 +1,6 @@
 import { query } from '../db/pool.js'
 
-const PUBLIC_COLUMNS = 'id, email, plan, password_changed_at, created_at'
+const PUBLIC_COLUMNS = 'id, email, name, plan, password_changed_at, created_at'
 
 export async function findByEmail(email) {
     const { rows } = await query(
@@ -24,12 +24,12 @@ export async function lockById(db, id) {
     return rows[0] ?? null
 }
 
-export async function create({ email, passwordHash, plan }) {
+export async function create({ email, name, passwordHash, plan }) {
     const { rows } = await query(
-        `INSERT INTO users (email, password_hash, plan)
-         VALUES ($1, $2, $3)
+        `INSERT INTO users (email, name, password_hash, plan)
+         VALUES ($1, $2, $3, $4)
          RETURNING ${PUBLIC_COLUMNS}`,
-        [email, passwordHash, plan],
+        [email, name, passwordHash, plan],
     )
     return rows[0]
 }
