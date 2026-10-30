@@ -6,7 +6,7 @@ import { logger } from '../lib/logger'
 export const pool = new Pool({
     connectionString: env.DATABASE_URL,
     ...(env.DATABASE_SSL ? { ssl: { rejectUnauthorized: false } } : {}),
-    max: 10,
+    max: env.DATABASE_POOL_MAX,
 })
 
 pool.on('error', (err) => logger.error({ err }, 'Idle Postgres client error'))

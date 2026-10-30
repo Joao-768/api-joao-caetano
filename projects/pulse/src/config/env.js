@@ -48,6 +48,9 @@ export const env = {
     isProduction,
     databaseUrl: required('DATABASE_URL'),
     databaseSsl: bool('DATABASE_SSL', isProduction),
+    // Shares the Supabase pooler with the Workflow engine: in session mode
+    // every pooled connection holds one of the project's backend connections.
+    databasePoolMax: int('DATABASE_POOL_MAX', 5),
     jwtSecret,
     // Public URL of the web app, used for reset links and the CSRF origin check.
     appUrl: (read('APP_URL') || 'http://localhost:5174').replace(/\/$/, ''),

@@ -37,6 +37,10 @@ services:
             sync: false
           - key: PULSE_DATABASE_SSL
             value: 'true'
+          # Pulse and Workflow share the Supabase pooler (15 backend connections
+          # on the free plan): 5 + 5 leaves room for the dashboard and migrations.
+          - key: PULSE_DATABASE_POOL_MAX
+            value: '5'
           - key: PULSE_JWT_SECRET
             generateValue: true
           - key: PULSE_APP_URL
@@ -55,6 +59,8 @@ services:
             sync: false
           - key: WORKFLOW_DATABASE_SSL
             value: 'true'
+          - key: WORKFLOW_DATABASE_POOL_MAX
+            value: '5'
           - key: WORKFLOW_REDIS_URL
             sync: false
           - key: WORKFLOW_QUEUE_PREFIX

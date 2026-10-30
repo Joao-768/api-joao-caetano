@@ -9,7 +9,7 @@ pg.types.setTypeParser(pg.types.builtins.NUMERIC, (value) => Number.parseFloat(v
 export const pool = new pg.Pool({
     connectionString: env.databaseUrl,
     ssl: env.databaseSsl ? { rejectUnauthorized: false } : false,
-    max: 10,
+    max: env.databasePoolMax,
 })
 
 pool.on('error', (error) => {

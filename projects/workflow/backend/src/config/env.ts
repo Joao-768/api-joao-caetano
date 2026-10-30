@@ -19,6 +19,11 @@ const schema = z
             .default('info'),
         DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
         DATABASE_SSL: bool.default(false),
+        /**
+         * Shares the Supabase pooler with Pulse Monitor: in session mode every
+         * pooled connection holds one of the project's backend connections.
+         */
+        DATABASE_POOL_MAX: z.coerce.number().int().min(2).max(50).default(5),
         REDIS_URL: z.string().min(1).default('redis://localhost:6379'),
         QUEUE_PREFIX: z.string().min(1).default('wae'),
 

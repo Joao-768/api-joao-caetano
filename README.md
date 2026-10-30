@@ -31,6 +31,7 @@ The registry is [src/projects.js](src/projects.js); the mount modules are `proje
 - **Startup.** The HTTP server listens first, then the projects start one at a time. A project whose variables are invalid is marked `failed`; one whose start fails (usually a database that is down) retries after 30 s, 1, 2, 5 and 10 minutes. Until it is up its prefix answers 503, and the other projects are unaffected.
 - **Requests.** Every project keeps its own error handler, and the host adds a backstop after it.
 - **Process.** `unhandledRejection` and `uncaughtException` are logged with the project they came from (read from the stack). The process keeps serving; only five uncaught exceptions within a minute make it exit, and Render restarts it.
+- **Database connections.** Pulse and Workflow share one Supabase project, whose pooler has 15 backend connections on the free plan; in session mode each pooled client holds one. Their pools are 5 each (`PULSE_DATABASE_POOL_MAX`, `WORKFLOW_DATABASE_POOL_MAX`), leaving room for the dashboard and migrations.
 - **Memory.** `npm start` caps the heap at 384 MB inside the 512 MB instance. Pulse runs 10 checks at a time (`PULSE_CHECK_CONCURRENCY`) and the Workflow worker 2 jobs at a time (`WORKFLOW_WORKER_CONCURRENCY`).
 
 ### Browser access
@@ -109,6 +110,7 @@ All of them are listed with local values in [.env.example](.env.example). In pro
 | `COLLAB_CLIENT_ORIGIN`        | `https://collabcode.joao-caetano.com`                  |
 | `PULSE_DATABASE_URL`          | Supabase session pooler, as the `pulse` role           |
 | `PULSE_DATABASE_SSL`          | `true`                                                 |
+| `PULSE_DATABASE_POOL_MAX`     | `5`                                                    |
 | `PULSE_JWT_SECRET`            | 32+ random characters                                  |
 | `PULSE_APP_URL`               | `https://pulse.joao-caetano.com`                       |
 | `PULSE_RESEND_API_KEY`        | Resend API key (password reset emails)                 |
@@ -117,6 +119,7 @@ All of them are listed with local values in [.env.example](.env.example). In pro
 | `PULSE_CHECK_CONCURRENCY`     | `10`                                                   |
 | `WORKFLOW_DATABASE_URL`       | Supabase session pooler, as `postgres`                 |
 | `WORKFLOW_DATABASE_SSL`       | `true`                                                 |
+| `WORKFLOW_DATABASE_POOL_MAX`  | `5`                                                    |
 | `WORKFLOW_REDIS_URL`          | Internal URL of the Render Key Value instance          |
 | `WORKFLOW_QUEUE_PREFIX`       | `wae`                                                  |
 | `WORKFLOW_JWT_SECRET`         | 32+ random characters                                  |
